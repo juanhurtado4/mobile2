@@ -122,7 +122,25 @@ enum httpRequestStrings: NSString {
 
 //let httpMethod: httpRequests
 
-let url = URL(string: "http://pokeapi.co/api/v2/evolution-chain/?limit=20&offset=20")
+//let url = URL(string: "http://pokeapi.co/api/v2/evolution-chain/?limit=20&offset=20")
+//
+//var request = URLRequest(url: url!)
+//request.httpMethod = "GET"
+////request.httpMethod = httpRequestStrings.GET
+//
+//let session = URLSession.shared
+//
+//let task = session.dataTask(with: request) { (data, response, error) in
+//
+//    if let data = data {
+//        let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+//        print(json)
+//
+//
+//    }
+//}.resume()
+
+let url = URL(string: "https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten")
 
 var request = URLRequest(url: url!)
 request.httpMethod = "GET"
@@ -131,12 +149,14 @@ request.httpMethod = "GET"
 let session = URLSession.shared
 
 let task = session.dataTask(with: request) { (data, response, error) in
-
+    
     if let data = data {
         let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
         print(json)
+        
+        
     }
-}.resume()
+    }.resume()
 
 //let task = session.dataTask(with: request) { (data, response, error) in
 //
