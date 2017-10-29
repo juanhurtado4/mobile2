@@ -6,35 +6,17 @@ import PlaygroundSupport
 
 PlaygroundSupport.PlaygroundPage.current.needsIndefiniteExecution = true
 
-let url = URL(string: "https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten")
 
-var request = URLRequest(url: url!)
-request.httpMethod = "GET"
-//request.httpMethod = httpRequestStrings.GET
-
-let session = URLSession.shared
-
-let task = session.dataTask(with: request) { (data, response, error) in
-    
-    if let data = data {
-        let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        print(json ?? "Did not work")
-        
-        
-    }
-    }.resume()
-
-
-struct joke {
+struct Joke {
     let jokeType: String
     let setup: String
     let punchline: String
 }
 
-extension joke: Decodable {
+extension Joke: Decodable {
 
  enum Keys: String, CodingKey {
-     case jokeType
+     case jokeType = "type"
      case setup
      case punchline
  }
@@ -51,7 +33,27 @@ extension joke: Decodable {
 }
 
 
+class Parse {
+    
+    init(name: String) {
+        let jsonURLString = "https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke"
+        guard let url = URL(string: jsonURLString) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            guard let data = data else { return }
+            
+            do {
+                let joke = try JSONDecoder().decode(Joke.self, from: data)
+                print("Type of joke: \(joke.jokeType)\n")
+                print("\(joke.setup)\n")
+                print("\(joke.punchline)")
+            }
+                
+            catch let jsonErr {
+                print("error serializing json:", jsonErr)
+            }
+            }.resume()
+    }
+}
 
-
-
-
+let attempt = Parse(name: "Joke Api")
+attempt
