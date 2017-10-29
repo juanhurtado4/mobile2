@@ -15,21 +15,22 @@ struct Joke {
 
 extension Joke: Decodable {
 
- enum Keys: String, CodingKey {
-     case jokeType = "type"
-     case setup
-     case punchline
- }
+    enum Keys: String, CodingKey {
+         case jokeType = "type"
+         case setup
+         case punchline
+    }
  
- init(from decoder: Decoder) throws {
-     let container = try decoder.container(keyedBy: Keys.self)
- 
-     let jokeType: String = try container.decode(String.self, forKey: .jokeType) // extracting the data
-     let setup: String = try container.decode(String.self, forKey: .setup)
-     let punchline: String = try container.decode(String.self, forKey: .punchline)
- 
-     self.init(jokeType: jokeType, setup: setup, punchline: punchline)
- }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Keys.self)
+        
+        // extracting the data
+        let jokeType: String = try container.decode(String.self, forKey: .jokeType)
+        let setup: String = try container.decode(String.self, forKey: .setup)
+        let punchline: String = try container.decode(String.self, forKey: .punchline)
+     
+        self.init(jokeType: jokeType, setup: setup, punchline: punchline)
+     }
 }
 
 
