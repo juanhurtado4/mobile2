@@ -1,6 +1,18 @@
-def display_status(status_code, json=None):
-    return (json, status_code, None)
+import json
+import pdb
+from flask import Flask, request, jsonify, make_response
+from pymongo import MongoClient
+from bson import Binary, Code
+from bson.json_util import dumps
+from flask_restful import Resource, Api
 
+app = Flask(__name__)
+mongo = MongoClient('localhost', 27017)
+app.db = mongo.trip_planner
+api = Api(app)
+
+def display_response(status_code, json=None):
+    return (json, status_code, None)
 
 def check_user(username, password):
         users_collection = app.db.users
@@ -25,7 +37,7 @@ def request_auth(http_method):
                 return http_method(*args, **kwargs)
 
             else:
-                return display_status(401)
+                return display_response(401)
 
         return wrapper
 
