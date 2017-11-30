@@ -1,1 +1,10 @@
 THREADS
+
+
+HTTP Request
+* URL
+* httpBody
+* httpMethods (GET, POST, etc)
+* queryParams
+* header
+* path/route
