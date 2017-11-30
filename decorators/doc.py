@@ -27,7 +27,6 @@ def check_user(username, password):
         else:
             return False
 
-
 def request_auth(http_method):
         def wrapper(*args, **kwargs):
             email = request.authorization.username
@@ -42,20 +41,23 @@ def request_auth(http_method):
         return wrapper
 
 
-def post(self):
+class Collections:
+    def __init__(self):
+        self.user_collection = app.db.users
+        self.trip_collection = app.db.trips
+
+
+class Users(Resource, Collections):
+    def post(self):
         '''
         Creates a new user
-
         '''
         new_user = request.json
         email = new_user['email']
         password = new_user['password']
 
-        users_collection = app.db.users
-        # users = users_collection.find_one( {"_id": ObjectId(result.inserted_id)} )
         user = users_collection.find_one({"email": email})
 
-        # if email != user['email']:
         if user is None:
             encoded_password = password.encode('utf-8')
 
@@ -70,14 +72,12 @@ def post(self):
             return("Email is already taken", 409, None)
 
 
-@request_auth
+    @request_auth
     def get(self):
         '''
         Shows all/specific users
         '''
-
-        users_collection = app.db.users
         email = request.authorization.username
-        user = users_collection.find_one({"email": email})
+        user = self.users_collection.find_one({"email": email})
         user.pop('password')
         return (user, 200, None)
