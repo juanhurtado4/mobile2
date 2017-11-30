@@ -4,7 +4,7 @@ import UIKit
 import PlaygroundSupport
 import Foundation
 
-PlaygroundSupport.
+PlaygroundSupport.PlaygroundPage.current.needsIndefiniteExecution = true
 
 struct Anime {
     
@@ -46,20 +46,59 @@ extension Anime: Decodable {
     }
 }
 
-struct AnimeList: Decoable {
+struct AnimeList: Decodable {
     let data: [Anime]
 }
 
 typealias JSON = [String: Any]
 
-class Networking {
+class NetworkingTest {
     
     let animeURL = URL(string: "https://kitsu.io/api/edge/anime")
     
-    URLSession.shared
+    URLSession.shared.dataTask(with: animeURL) { (data, response, err) in
+    
+        guard let data = data else {return}
+    
+        do {
+            let anime = try JSONDecoder().decode(AnimeList.self, from: data)
+            print("Title: \(anime.title)\n Rating: \(anime.rating)\n Synopsis: \(anime.synopsis)")
+        }
+    
+        catch let jsonErr {
+            print("error")
+        }
+    }.resume()
 }
 
+let animeTest = NetworkingTest()
+animeTest
 
+/*
+class ParseAnime {
+    
+    init(name: String) {
+        let animeURL = "https://kitsu.io/api/edge/anime"
+        guard let url = URL(string: animeURL) else {return}
+        
+        URLSession.shared.dataTask(with: url) { (data, resposne, err) in
+            
+            guard let data = data else {return}
+            
+            do {
+                let anime = try JSONDecoder().decode(AnimeArr.self, from: data)
+                print("Anime id: \(anime.data)")
+            }
+                
+            catch let jsonErr {
+                print("error 2")
+            }
+            }.resume()
+    }
+}
 
+let animeTest = ParseAnime(name: "Try")
+animeTest
+*/
 
 
