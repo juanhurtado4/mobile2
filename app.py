@@ -1,11 +1,14 @@
-import json
-import pdb
 from flask import Flask, request, jsonify, make_response
+from flask_restful import Resource, Api
+from bson.json_util import dumps
 from pymongo import MongoClient
 from bson import Binary, Code
-from bson.json_util import dumps
-from flask_restful import Resource, Api
 import bcrypt
+import json
+import pdb
+import sys
+sys.path.insert(0, '/Users/juanhurtado/code/personal_projects/namify')
+from main import display_response
 
 app = Flask(__name__)
 mongo = MongoClient(
