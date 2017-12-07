@@ -93,7 +93,8 @@ class Users(Resource, Collections):
         return (user, 200, None)
 
 
-api.add_resource(Users, '/users')
+# api.add_resource(Users, '/users')
+api.add_resource(Users, 'https://trip-planner-best.herokuapp.com/users')
 
 if __name__=='__main__':
     app.run(debug=True)
