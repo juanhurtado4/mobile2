@@ -58,8 +58,8 @@ class Collections:
         self.trip_collection = app.db.trips
 
 class Users(Resource, Collections):
-    # TODO: Display correct status code
     # TODO: Implement patch method
+    # TODO: Has new_password in patch function
     # TODO: Implement delete method
     # TODO: Implement trip class
 
@@ -96,9 +96,22 @@ class Users(Resource, Collections):
         
         user = users_collection.find_one({"email": email})
         user.pop('password')
-        
-        return display_response(200, user)
 
+        return display_response(200, user)
+    
+    @request_auth
+    def patch(self):
+        '''
+        Update password
+        '''
+        new_password = request.json
+        username = request.authorization.username
+
+        users_collection.find_one_and_update(
+            {'email': username},
+            {'$set': {"password": new_password}}
+        )
+        return display_response(200)
 
 api.add_resource(Users, '/users')
 
