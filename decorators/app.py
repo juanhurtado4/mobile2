@@ -12,7 +12,8 @@ from main import display_response
 
 app = Flask(__name__)
 mongo = MongoClient(
-    'mongodb://trip_username:NewYorkCity@ds161169.mlab.com:61169/trip_planner_production_best')
+    'mongodb://trip_username:NewYorkCity@ds161169.mlab.com:61169/trip_planner_production_best'
+)
 
 app.db = mongo.trip_planner_production_best
 api = Api(app)
@@ -56,8 +57,12 @@ class Collections:
         self.user_collection = app.db.users_collection
         self.trip_collection = app.db.trips
 
-
 class Users(Resource, Collections):
+    # TODO: Display correct status code
+    # TODO: Implement patch method
+    # TODO: Implement delete method
+    # TODO: Implement trip class
+
     def post(self):
         '''
         Creates a new user
@@ -77,9 +82,9 @@ class Users(Resource, Collections):
             new_user['password'] = hashed_password
             results = users_collection.insert_one(new_user)
             new_user.pop('password')
-            return(new_user, 200, None)
+            return display_response(200, new_user)
         else:
-            return("Email is already taken", 409, None)
+            return display_response(409)
 
 
     @request_auth
@@ -88,13 +93,21 @@ class Users(Resource, Collections):
         Shows all/specific users
         '''
         email = request.authorization.username
-        user = self.users_collection.find_one({"email": email})
+        
+        user = users_collection.find_one({"email": email})
         user.pop('password')
-        return (user, 200, None)
+        
+        return display_response(200, user)
 
 
-# api.add_resource(Users, '/users')
-api.add_resource(Users, 'https://trip-planner-best.herokuapp.com/users')
+api.add_resource(Users, '/users')
 
-if __name__=='__main__':
+
+@api.representation('application/json')
+def output_json(data, code, headers=None):
+    resp = make_response(dumps(data), code)
+    resp.headers.extend(headers or {})
+    return resp
+
+if __name__ == '__main__':
     app.run(debug=True)
