@@ -58,6 +58,7 @@ class Collections:
         self.trip_collection = app.db.trips
 
 class Users(Resource, Collections):
+    # TODO: Create a new branch
     # TODO: Implement patch method
     # TODO: Has new_password in patch function
     # TODO: Implement delete method
